@@ -51,3 +51,31 @@ async function fuzzAdd() {
     timestampPurchased = timestampAdded;
   }
 }
+
+try{
+
+if(item === ""){
+  throw new Error("Invalid item"); //fail test if item is empty
+}
+if(recommendedLocation === ""){
+  throw new Error("Invalid location");
+}
+  
+  const addResponse = await client.entities.shoppingList.add({
+    item,
+    quantity,
+    recommendedLocation,
+    bought,
+    timestampAdded,
+    timestampPurchased,
+  });
+  
+  console.log("Succesfully added item:", addResponse);
+  return true;
+} catch (error){
+  console.error("Error adding item:", error);
+  console.error("Error adding location:", error);
+  return false;
+  }
+}
+  
