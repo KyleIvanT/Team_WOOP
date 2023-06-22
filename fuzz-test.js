@@ -37,3 +37,17 @@ async function fuzzAdd() {
     websocketUrl: 'wss://jlqebn4p1e.execute-api.us-west-2.amazonaws.com/graphql',
     apiKey: 'J57X45S3yx5j4yVGzo1AV3HRKiD7u6xrjW4z64g4cN2n', // <---- API key
   });
+
+  const item = getRandomItem();
+  const quantity = String(getRandomInt(1, 10));
+  const recommendedLocation = getRandomLocation();
+  const bought = getRandomBool();
+  const timestampAdded = getRandomTimestamp();
+  let timestampPurchased = " ";
+  if(bought)
+  {
+    timestampPurchased = getRandomTimestamp();
+  }else {
+    timestampPurchased = timestampAdded;
+  }
+}
