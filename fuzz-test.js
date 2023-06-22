@@ -24,3 +24,16 @@ function getRandomItem() {
   const randomIndex = getRandomInt(0, items.length - 1);
   return items[randomIndex];
 } //gives a random item for item
+
+function getRandomLocation() {
+  const locations = ["Walmart", "Target", "Grocery Store", "Supermarket"];
+  const randomIndex = getRandomInt(0, locations.length - 1);
+  return locations[randomIndex];
+}
+
+async function fuzzAdd() {
+  const client = createVendiaClient({
+    apiUrl: 'https://prffvvgcza.execute-api.us-west-2.amazonaws.com/graphql/',
+    websocketUrl: 'wss://jlqebn4p1e.execute-api.us-west-2.amazonaws.com/graphql',
+    apiKey: 'J57X45S3yx5j4yVGzo1AV3HRKiD7u6xrjW4z64g4cN2n', // <---- API key
+  });
