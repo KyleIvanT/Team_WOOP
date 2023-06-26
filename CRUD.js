@@ -29,8 +29,7 @@ async function add() {
               bought: true,
               timestampAdded: "2023-06-18T13:00:00Z",
               timestampPurchased: "2023-06-19T14:00:00Z"
-          },
-          { syncMode: "ASYNC" } // Specify the syncMode option here
+          }, { syncMode: "ASYNC" }
       );
   });
 }
@@ -55,22 +54,21 @@ async function search() {
 
 //UPDATES AN ITEM IN THE SHOPPING LIST // CAN"T GET IT TO WORK dont understand 
 //USING everything from https://www.vendia.com/docs/share/vendia-client-sdk
+
 async function updateItem() {
   await measureExecutionTime(async () => {
-      const updateResponse = await entities.shoppingList.update({
-          _id: '0188e529-d14b-0849-9200-b2843773d72f',
-          item: 'REMOTE',
-          quantity: '55',
-          recommendedLocation: "TEST",
-          bought: false,
-          timestampAdded: "2023-06-18T13:00:00Z",
-          timestampPurchased: "2023-06-19T14:00:00Z"
-      });
-      const items = await entities.shoppingList.get("0188e529-d14b-0849-9200-b2843773d72f");
-      // Update shoppingList.list as needed
-      const updateItemResponse = await entities.shoppingList.update(items);
+    const ItemUpdate = await entities.shoppingList.update({
+    _id:'0188e9fa-2111-9105-d792-b6d89bbd4906',
+    item: "TEST",
+    quantity: "10000",
+    recommendedLocation: "Amazon",
+    bought: false
+
+    })
+    // Handle the update response here
   });
 }
+
 //DELETES ITEM BY _ID
 async function deleteItem() {
   await measureExecutionTime(async () => {
@@ -83,11 +81,11 @@ async function deleteItem() {
 //BELOW ARE THE FUNCTIONS TO DO ABOVE uncomment any of them to use if you want to see it work go onto VEndia entity explorer and choose an _id and paste it above to any of the places where it requires an ID 
 //Search and list fucntion shows in the terminal,  delete removes it from the entity explorer, update will update the entity exporer still working on it 
 //--------------------------//
-console.log("add")
-add();
+//console.log("add")
+//add();
 //console.log("Search")
 //search();
-//updateItem();
+updateItem();
 //deleteItem();
 //updateItem();
 //listItems();
