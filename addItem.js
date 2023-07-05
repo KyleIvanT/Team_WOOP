@@ -19,11 +19,10 @@ async function measureExecutionTime(fn) {
 
   const { entities } = client
 
-  async function updateItem(itemId, item, quantity, recommendedLocation, timestampAdded, timestampPurchased) {
+  async function addItem(item, quantity, recommendedLocation, timestampAdded, timestampPurchased) {
     
     
-    const updatedItem = await entities.shoppingList.update({
-      _id: itemId,
+    const updatedItem = await entities.shoppingList.add({
       item: item,
       quantity: quantity,
       recommendedLocation: recommendedLocation,
@@ -37,5 +36,5 @@ async function measureExecutionTime(fn) {
   
 
   module.exports = {
-    updateItem
+    addItem
   };

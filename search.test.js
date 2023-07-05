@@ -1,39 +1,44 @@
-const { Search } = require('./Search.js'); // Replace 'your-module' with the actual module path
+const { Search } = require('./Search.js'); 
 
 describe('Search', () => {
+  
   it('should handle invalid API URL', async () => {
-    // Arrange
-    
-    
-    // Act and Assert
-    await expect(Search()).rejects.toThrowError(' invalid API URL');
-    
+    const apiURL = 'https://prffvvgcza.execute-api.us-west-2.amazonaws.com/graphql/';
+  
+    await expect(async () => {
+      await Search(apiURL);
+    }).rejects.toThrow();
   }, 10000);
+  
 
   it('should handle invalid WebSocket URL', async () => {
-    
-    await expect(Search()).rejects.toThrowError(' invalid Websocket URL');
-    
-  }, 10000);
-
-
-  it('should handle invalid shopping list ID', async () => {
-    // Arrange
-    // Pass an invalid shopping list ID to the entities.shoppingList.get method
-    
-    // Act and Assert
-    await expect(Search()).rejects.toThrowError(Error);
+    const websocketUrl = 'wss://jlqebn4p1e.execute-api.us-west-2.amazonaws.com/graphqlS';
    
+    await expect(async () => {
+      await Search(websocketUrl);
+    }).rejects.toThrow();
   }, 10000);
+
+ 
 
   it('should handle network timeout', async () => {
-    // Arrange
-    // Introduce a delay or timeout in the entities.shoppingList.get method
     
-    // Act and Assert
     await expect(Search()).rejects.toThrowError('Network timeout');
    
   });
+
+  it('handle invalid shopping list ID', async () => {
+    const itemId = "invalid";
+    
+    const result = await Search(
+      itemId
+    );
+
+    expect(result._id).toBe(itemId);
+    const uuidFormat = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+    expect(uuidFormat.test(itemId)).toBe(true);
+   
+  }, 10000);
 
 
 

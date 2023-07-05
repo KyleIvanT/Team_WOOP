@@ -3,15 +3,133 @@ const { updateItem } = require('./updateItem.js'); // Import the necessary depen
   describe('updateItem', () => {
   
 
- it('Testing Multiple strings in one variable', async () => {
+    it('Testing Multiple strings in one variable', async () => {
+      // Arrange
+      const itemId = '01890b95-4ca2-cb31-c39a-9585dd798481';
+      const item = 'aaaaaaaaa,aaaa , aaaaa';
+      const quantity = '4';
+      const recommendedLocation = 'aaaaaa, aaaa ,aaaa aaaaa';
+      const timestampAdded = '2021-06-18T13:00:00Z';
+      const timestampPurchased = '2021-06-18T13:00:00Z';
+      const bought = true;
+    
+      // Act
+      const result = await updateItem(
+        itemId,
+        item,
+        quantity,
+        recommendedLocation,
+        timestampAdded,
+        timestampPurchased,
+        bought
+      );
+    
+      // Assert
+      expect(result.result._id).toBe(itemId);
+      expect(result.result.item).toBe(item);
+      expect(result.result.quantity).toBe(quantity);
+      expect(result.result.bought).toBe(bought);
+      expect(result.result.recommendedLocation).toBe(recommendedLocation);
+    
+      // Check if item string has more than one item separated by commas
+      const itemItems = item.split(',');
+      expect(itemItems.length).toBe(1);
+    
+      // Check if recommendedLocation string has more than one item separated by commas
+      const locationItems = recommendedLocation.split(',');
+      expect(locationItems.length).toBe(1);
+    });
+    
+
+it('Testing emojis', async () => {
+  // Arrange
+  const itemId = '01890b95-4ca2-cb31-c39a-9585dd798481';
+  const item = '😤';
+  const quantity = '😤';
+  const recommendedLocation = '😤'
+  const timestampAdded = '2021-06-18T13:00:00Z'
+  const timestampPurchased = '2021-06-18T13:00:00Z';
+  const bought = true;
+
+  // Act
+  const result = await updateItem(
+    itemId,
+    item,
+    quantity,
+    recommendedLocation,
+    timestampAdded,
+    timestampPurchased,
+    bought
+  );
+
+
+  expect(result.result.item).toMatch(/^[a-zA-Z\s,]+$/);
+  expect(result.result.quantity).toMatch(/^[a-zA-Z\s,]+$/);
+  expect(result.result.recommendedLocation).toMatch(/^[a-zA-Z\s,]+$/);
+});
+
+it('Testing Bought variable if it was a string instead of boolean', async () => {
+  // Arrange
+  const itemId = '01890b95-4ca2-cb31-c39a-9585dd798481';
+  const item = 'aaaaaaaaa,aaaa , aaaaa';
+  const quantity = '4';
+  const recommendedLocation = 'aaaaaa, aaaa ,aaaa aaaaa';
+  const timestampAdded = '2021-06-18T13:00:00Z';
+  const timestampPurchased = '2021-06-18T13:00:00Z';
+  const bought = "true";
+
+  // Act
+  const result = await updateItem(
+    itemId,
+    item,
+    quantity,
+    recommendedLocation,
+    timestampAdded,
+    timestampPurchased,
+    bought
+  );
+
+  // Assert
+  
+  expect(result.result.bought).toBe(bought);
+
+
+  expect(typeof result.result.bought).toBe(Boolean);
+
+});
+
+it('Test quantity for string value fails test for being a integer ', async () => {
+  // Arrange
+  const itemId = '01890b95-4ca2-cb31-c39a-9585dd798481';
+  const item = 'aaaaaaaaa,aaaa , aaaaa';
+  const quantity = 4;
+  const recommendedLocation = 'aaaaaa, aaaa ,aaaa aaaaa';
+  const timestampAdded = '2021-06-18T13:00:00Z';
+  const timestampPurchased = '2021-06-18T13:00:00Z';
+  const bought = "true";
+
+  // Act
+  const result = await updateItem(
+    itemId,
+    item,
+    quantity,
+    recommendedLocation,
+    timestampAdded,
+    timestampPurchased,
+    bought
+  );
+  expect(result.result.quantity).toBe('string');
+});
+
+  it('Test quantity for negative values ', async () => {
     // Arrange
-    const itemId = '01890989-deca-f475-08c5-4e60b5bc57ba';
+    const itemId = '01890b95-4ca2-cb31-c39a-9585dd798481';
     const item = 'aaaaaaaaa,aaaa , aaaaa';
-    const quantity = '4';
-    const recommendedLocation = 'aaaaaa, aaaa ,aaaa aaaaa'
-    const timestampAdded = '2021-06-18T13:00:00Z'
+    const quantity = -4;
+    const recommendedLocation = 'aaaaaa, aaaa ,aaaa aaaaa';
+    const timestampAdded = '2021-06-18T13:00:00Z';
     const timestampPurchased = '2021-06-18T13:00:00Z';
-    const bought = false;
+    const bought = true;
   
     // Act
     const result = await updateItem(
@@ -23,268 +141,120 @@ const { updateItem } = require('./updateItem.js'); // Import the necessary depen
       timestampPurchased,
       bought
     );
-  
-    // Assert
-    expect(result).toEqual({
-      result: {
-        _id: itemId,
-        _owner: 'NodeOne',
-        bought: false,
-        item: 'Apple',
-        quantity: '2',
-        recommendedLocation: 'Walmart',
-        timestampAdded: '2022-06-18T13:00:00Z',
-        timestampPurchased: '2021-06-18T13:00:00Z',
-      },
-      transaction: {
-        _id: itemId,
-        _owner: 'NodeOne',
-        submissionTime: expect.any(String),
-        transactionId: expect.any(String),
-        version: '1.0.0',
-      },
-  });
 
-   expect(result.result.quantity).toBe('2');
-   expect(result.result.item).toBe('Apple');
-   expect(result.result.recommendedLocation).toBe('Walmart');
-  
-});
-  
+  // Assert
 
-   // });
-      
-      
-  /* it('should throw an error for invalid item', async () => {
-    // Arrange
-    const itemId = '01890989-deca-f475-08c5-4e60b5bc57ba';
-    const item = ' ';
-    const quantity = '6';
-    const recommendedLocation = 'Walmart';
-    const timestampAdded = '2022-06-18T13:00:00Z';
-    const timestampPurchased = '2021-06-18T13:00:00Z';
-    const bought = false;
   
-    try {
-      // Act
-      await updateItem(
-        itemId,
-        item,
-        quantity,
-        recommendedLocation,
-        timestampAdded,
-        timestampPurchased,
-        bought
-      );
-  
-      // If the updateItem function does not throw an error, fail the test
-      fail('Expected updateItem to throw an error');
-    } catch (error) {
-      // Assert
-      expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe('Item, quantity, or recommended location cannot be empty.');
-    }
-  }); 
-  
-  
-  
+  const hasNegativeNumber = /-\d+/.test(quantity);
+  expect(hasNegativeNumber).toBe(false);
 
-  /*it('should throw an error for item with emoji', async () => {
-    // Arrange
-    const itemId = '01890989-deca-f475-08c5-4e60b5bc57ba';
-    const item = "";
-    const quantity = "";
-    const recommendedLocation = "";
-    const timestampAdded = "2022-06-18T13:00:00Z";
-    const timestampPurchased = "2021-06-18T13:00:00Z";
-    const bought = false;
-
-    // Act
-     // Act and Assert
-     try {
-        console.log("Calling updateItem...");
-        await updateItem(itemId, item, quantity, recommendedLocation, timestampAdded, timestampPurchased, bought);
-        console.log("updateItem completed without throwing an error.");
-      } catch (error) {
-        console.log("Caught an error:", error);
-        expect(error.message).toBe("Item, quantity, or recommended location cannot be emoji.");
-      }
+}, 10000);
 
 
-  });
-  it('should throw an error for item, quantity, or recommended location with multiple strings', async () => {
-    // Arrange
-    const itemId = '01890989-deca-f475-08c5-4e60b5bc57ba';
-    const item = "Apple Orange Banana";
-    const quantity = "33";
-    const recommendedLocation = "Walmart Target";
-    const timestampAdded = "2022-06-18T13:00:00Z";
-    const timestampPurchased = "2021-06-18T13:00:00Z";
-    const bought = false;
+it('Testing string variables for exceeding character limit', async () => {
+  // Arrange
+  const itemId = '01890b95-4ca2-cb31-c39a-9585dd798481';
+  const item = 'asdasdasdsdddzxczxczcz';
+  const quantity = '101';
+  const recommendedLocation = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+  const timestampAdded = '2021-06-18T13:00:00Z';
+  const timestampPurchased = '2021-06-18T13:00:00Z';
+  const bought = true;
   
-    // Act
-    // Act and Assert
-    try {
-        console.log("Calling updateItem...");
-        await updateItem(itemId, item, quantity, recommendedLocation, timestampAdded, timestampPurchased, bought);
-        console.log("updateItem completed without throwing an error.");
-      } catch (error) {
-        console.log("Caught an error:", error);
-        expect(error.message).toBe("Item, quantity, or recommended location cannot be multiple strings.");
-      }
-    });
 
-  it('should throw an error for item, quantity, or recommended location exceeding the maximum length', async () => {
-    // Arrange
-    const itemId = '01890989-deca-f475-08c5-4e60b5bc57ba';
-    const item = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo ipsum ac est consectetur";
-    const quantity = "3";
-    const recommendedLocation = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo ipsum ac est consectetur";
-    const timestampAdded = "2022-06-18T13:00:00Z";
-    const timestampPurchased = "2021-06-18T13:00:00Z";
-    const bought = false;
-  
-    // Act
-    // Act and Assert
-    try {
-        console.log("Calling updateItem...");
-        await updateItem(itemId, item, quantity, recommendedLocation, timestampAdded, timestampPurchased, bought);
-        console.log("updateItem completed without throwing an error.");
-      } catch (error) {
-        console.log("Caught an error:", error);
-        expect(error.message).toBe("Item, quantity, or recommended location cannot exceed maximum string length.");
-      }
-    });
-  
-  it('should throw an error for invalid timestamp format', async () => {
-    // Arrange
-    const itemId = '01890989-deca-f475-08c5-4e60b5bc57ba';
-    const item = "apples";
-    const quantity = "3";
-    const recommendedLocation = "Walmart";
-    const timestampAdded = "2022-06-18T13:00:00Z";
-    const timestampPurchased = "2021/06/18 13:00:00"; // Invalid timestamp format
-    const bought = false;
+  // Act
+  const result = await updateItem(
+    itemId,
+    item,
+    quantity,
+    recommendedLocation,
+    timestampAdded,
+    timestampPurchased,
+    bought
     
+  );
 
-    // Act and Assert
-    try {
-        console.log("Calling updateItem...");
-        await updateItem(itemId, item, quantity, recommendedLocation, timestampAdded, timestampPurchased, bought);
-        console.log("updateItem completed without throwing an error.");
-      } catch (error) {
-        console.log("Caught an error:", error);
-        expect(error.message).toBe("timestamp is invalid");
-      }
-    });
+  // Assert
+  expect(result.result._id).toBe(itemId);
+  expect(result.result.item).toBe(item);
+  expect(result.result.quantity).toBe(quantity);
+  expect(result.result.recommendedLocation).toBe(recommendedLocation);
   
-  it('should throw an error for invalid boolean input', async () => {
-    // Arrange
-    const itemId = '01890989-deca-f475-08c5-4e60b5bc57ba';
-    const item = "apples";
-    const quantity = "3";
-    const recommendedLocation = "Walmart";
-    const timestampAdded = "2022-06-18T13:00:00Z";
-    const timestampPurchased = "2021-06-18T13:00:00Z";
-    const bought = "true"; // Invalid boolean input (string instead of boolean)
+  // Check if quantity exceeds character limit (e.g., 10 characters)
+  const quantityLimit = 100;
+  expect(quantity.length).toBeLessThanOrEqual(quantityLimit);
   
-     // Act and Assert
-     try {
-        console.log("Calling updateItem...");
-        await updateItem(itemId, item, quantity, recommendedLocation, timestampAdded, timestampPurchased, bought);
-        console.log("updateItem completed without throwing an error.");
-      } catch (error) {
-        console.log("Caught an error:", error);
-        expect(error.message).toBe("bought must be boolean input.");
-      }
-    });
-  
-  it('should throw an error for invalid item ID format', async () => {
-    // Arrange
-    const itemId = 'invalid-id'; // Invalid item ID format
-    const item = "apples";
-    const quantity = "3";
-    const recommendedLocation = "Walmart";
-    const timestampAdded = "2022-06-18T13:00:00Z";
-    const timestampPurchased = "2021-06-18T13:00:00Z";
-    const bought = false;
-  
-    // Act
-  // Act and Assert
-  try {
-    console.log("Calling updateItem...");
-    await updateItem(itemId, item, quantity, recommendedLocation, timestampAdded, timestampPurchased, bought);
-    console.log("updateItem completed without throwing an error.");
-  } catch (error) {
-    console.log("Caught an error:", error);
-    expect(error.message).toBe("invalid ID format");
-  }
+
+  // Check if item string exceeds character limit (e.g., 20 characters per item)
+  const itemLimit = 20;
+  const itemItems = item.split(',');
+  expect(itemItems.every(item => item.trim().length <= itemLimit)).toBe(true);
+
+  // Check if recommendedLocation string exceeds character limit (e.g., 25 characters per location)
+  const locationLimit = 25;
+  const locationItems = recommendedLocation.split(',');
+  expect(locationItems.every(location => location.trim().length <= locationLimit)).toBe(true);
 });
+
+it('Testing if timestampAdded and purchased are proper format', async () => {
+  // Arrange
+  const itemId = '01890b95-4ca2-cb31-c39a-9585dd798481';
+  const item = 'aaaaaaaaa,aaaa , aaaaa';
+  const quantity = '4';
+  const recommendedLocation = 'aaaaaa, aaaa ,aaaa aaaaa';
+  const timestampAdded = '06-2012-18T13:00:00Z';
+  const timestampPurchased = '04-2000-18T13:00:00Z';
+  const bought = 'true';
+
+  // Act
+  const result = await updateItem(
+    itemId,
+    item,
+    quantity,
+    recommendedLocation,
+    timestampAdded,
+    timestampPurchased,
+    bought
+  );
+
+  // Assert
+ expect(result.result.timestampAdded).toBe(timestampAdded);
+ expect(result.result.timestampPurchased).toBe(timestampPurchased);
   
-  it('should update an item successfully without optional inputs', async () => {
-    // Arrange
-    const itemId = '01890989-deca-f475-08c5-4e60b5bc57ba';
-    const item = "apples";
-    const quantity = "3";
-    const recommendedLocation = "Walmart";
-    const timestampAdded = "2022-06-18T13:00:00Z";
-  
-    // Act
-    // Act and Assert
-    try {
-        console.log("Calling updateItem...");
-        await updateItem(itemId, item, quantity, recommendedLocation, timestampAdded);
-        console.log("updateItem completed without throwing an error.");
-      } catch (error) {
-        console.log("Caught an error:", error);
-        expect(error.message).toBe("updated item without optional inputs.");
-      }
-    });
-  
-  it('should throw an error if timestampPurchased is earlier than timestampAdded', async () => {
-    // Arrange
-    const itemId = '01890989-deca-f475-08c5-4e60b5bc57ba';
-    const item = "apples";
-    const quantity = "3";
-    const recommendedLocation = "Walmart";
-    const timestampAdded = "2022-06-18T13:00:00Z";
-    const timestampPurchased = "2021-06-18T13:00:00Z"; // Earlier timestamp than timestampAdded
-    const bought = false;
-  
-     // Act and Assert
-     try {
-        console.log("Calling updateItem...");
-        await updateItem(itemId, item, quantity, recommendedLocation, timestampAdded, timestampPurchased, bought);
-        console.log("updateItem completed without throwing an error.");
-      } catch (error) {
-        console.log("Caught an error:", error);
-        expect(error.message).toBe("timestampPurchased is earlier than timestampAdded.");
-      }
-    });
+  // Check if timestampAdded and timestampPurchased have valid formats
+  const timestampFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
+  expect(timestampFormat.test(timestampAdded)).toBe(true);
+  expect(timestampFormat.test(timestampPurchased)).toBe(true);
+}, 10000);
+
+it('Testing invalid itemID', async () => {
+  // Arrange
+  const itemId = 'invalid-id';
+  const item = 'aaaaaaaaa,aaaa , aaaaa';
+  const quantity = '4';
+  const recommendedLocation = 'aaaaaa, aaaa ,aaaa aaaaa';
+  const timestampAdded = '2021-06-18T13:00:00Z';
+  const timestampPurchased = '2021-06-18T13:00:00Z';
+  const bought = 'true';
+
+  // Act
+  const result = await updateItem(
+    itemId,
+    item,
+    quantity,
+    recommendedLocation,
+    timestampAdded,
+    timestampPurchased,
+    bought
+  );
+
+  // Assert
+  expect(result.result._id).toBe(itemId);
+
+  // Check if itemId is a valid UUID format
+  const uuidFormat = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+  expect(uuidFormat.test(itemId)).toBe(true);
 });
-  
-  
-  it('should throw an error for negative quantity', async () => {
-    // Arrange
-    const itemId = '01890989-deca-f475-08c5-4e60b5bc57ba';
-    const item = "apples";
-    const quantity = -3; // Negative quantity
-    const recommendedLocation = "Walmart";
-    const timestampAdded = "2022-06-18T13:00:00Z";
-    const timestampPurchased = "2021-06-18T13:00:00Z";
-    const bought = false;
-  
-    // Act and Assert
-     // Act and Assert
-     try {
-        console.log("Calling updateItem...");
-        await updateItem(itemId, item, quantity, recommendedLocation, timestampAdded, timestampPurchased, bought);
-        console.log("updateItem completed without throwing an error.");
-      } catch (error) {
-        console.log("Caught an error:", error);
-        expect(error.message).toBe("quantity cannot be negative.");
-      } */
-    
+
 });
-  
 
