@@ -77,5 +77,29 @@ if(recommendedLocation === ""){
   console.error("Error adding location:", error);
   return false;
   }
-}
+
+  async function runFuzzTest(numIterations) {
+    let correctTests = 0;
+    let failedTests = 0;
+  
+    for (let i = 0; i < numIterations; i++) {
+      console.log("Fuzz Test Iteration:", i + 1);
+      const isTestSuccessful = await fuzzAdd();
+  
+      if (isTestSuccessful) {
+        correctTests++;
+      } else {
+        failedTests++;
+      }
+  
+      console.log("--------------------------------------------");
+    }
+  
+    console.log("Total tests:", numIterations);
+    console.log("Correct tests:", correctTests);
+    console.log("Failed tests:", failedTests);
+  }
+  
+  
+  runFuzzTest(10); // Run 10 fuzz test iterations
   
